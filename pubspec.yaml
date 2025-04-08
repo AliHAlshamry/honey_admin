@@ -1,0 +1,59 @@
+name: honey_admin
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  dio: ^5.3.2
+  get: ^4.6.5
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.7
+  persistent_bottom_nav_bar: ^6.2.1
+  built_value: ^8.4.4
+  built_collection: ^5.1.1
+  intl: ^0.19.0
+  win32 : ^5.11.0
+  get_storage: ^2.1.1
+  flutter_launcher_icons: ^0.14.3
+
+  flutter_easyloading: ^3.0.5
+  jwt_decoder: ^2.0.1
+  google_fonts: ^6.2.1
+  loading_animation_widget: ^1.2.0+4
+  change_app_package_name: ^1.1.0
+  flutter_dotenv: ^5.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.6
+  built_value_generator: ^8.4.4
+
+  flutter_lints: ^5.0.0
+
+flutter:
+
+  uses-material-design: true
+
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/.env
+
+  fonts:
+    - family: hakkak
+      fonts:
+        - asset: assets/fonts/hakkakbook-Book.otf
+          weight: 200
+        - asset: assets/fonts/hakkakheavy-Heavy.otf
+          weight: 500
+        - asset: assets/fonts/hakkakmedium-Medium.otf
+          weight: 900
