@@ -102,11 +102,6 @@ class _$ItemModelSerializer implements StructuredSerializer<ItemModel> {
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
-      'description',
-      serializers.serialize(
-        object.description,
-        specifiedType: const FullType(String),
-      ),
       'sku',
       serializers.serialize(object.sku, specifiedType: const FullType(String)),
       'stockStatus',
@@ -114,8 +109,6 @@ class _$ItemModelSerializer implements StructuredSerializer<ItemModel> {
         object.stockStatus,
         specifiedType: const FullType(String),
       ),
-      'qty',
-      serializers.serialize(object.qty, specifiedType: const FullType(int)),
       'orginalPrice',
       serializers.serialize(
         object.orginalPrice,
@@ -150,6 +143,20 @@ class _$ItemModelSerializer implements StructuredSerializer<ItemModel> {
       ),
     ];
     Object? value;
+    value = object.description;
+    if (value != null) {
+      result
+        ..add('description')
+        ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)),
+        );
+    }
+    value = object.qty;
+    if (value != null) {
+      result
+        ..add('qty')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
     value = object.discountedPrice;
     if (value != null) {
       result
@@ -196,8 +203,8 @@ class _$ItemModelSerializer implements StructuredSerializer<ItemModel> {
               serializers.deserialize(
                     value,
                     specifiedType: const FullType(String),
-                  )!
-                  as String;
+                  )
+                  as String?;
           break;
         case 'sku':
           result.sku =
@@ -217,11 +224,8 @@ class _$ItemModelSerializer implements StructuredSerializer<ItemModel> {
           break;
         case 'qty':
           result.qty =
-              serializers.deserialize(
-                    value,
-                    specifiedType: const FullType(int),
-                  )!
-                  as int;
+              serializers.deserialize(value, specifiedType: const FullType(int))
+                  as int?;
           break;
         case 'orginalPrice':
           result.orginalPrice =
@@ -509,13 +513,13 @@ class _$ItemModel extends ItemModel {
   @override
   final String name;
   @override
-  final String description;
+  final String? description;
   @override
   final String sku;
   @override
   final String stockStatus;
   @override
-  final int qty;
+  final int? qty;
   @override
   final String orginalPrice;
   @override
@@ -537,10 +541,10 @@ class _$ItemModel extends ItemModel {
   _$ItemModel._({
     required this.id,
     required this.name,
-    required this.description,
+    this.description,
     required this.sku,
     required this.stockStatus,
-    required this.qty,
+    this.qty,
     required this.orginalPrice,
     required this.discount,
     this.discountedPrice,
@@ -551,18 +555,12 @@ class _$ItemModel extends ItemModel {
   }) : super._() {
     BuiltValueNullFieldError.checkNotNull(id, r'ItemModel', 'id');
     BuiltValueNullFieldError.checkNotNull(name, r'ItemModel', 'name');
-    BuiltValueNullFieldError.checkNotNull(
-      description,
-      r'ItemModel',
-      'description',
-    );
     BuiltValueNullFieldError.checkNotNull(sku, r'ItemModel', 'sku');
     BuiltValueNullFieldError.checkNotNull(
       stockStatus,
       r'ItemModel',
       'stockStatus',
     );
-    BuiltValueNullFieldError.checkNotNull(qty, r'ItemModel', 'qty');
     BuiltValueNullFieldError.checkNotNull(
       orginalPrice,
       r'ItemModel',
@@ -762,11 +760,7 @@ class ItemModelBuilder implements Builder<ItemModel, ItemModelBuilder> {
               r'ItemModel',
               'name',
             ),
-            description: BuiltValueNullFieldError.checkNotNull(
-              description,
-              r'ItemModel',
-              'description',
-            ),
+            description: description,
             sku: BuiltValueNullFieldError.checkNotNull(
               sku,
               r'ItemModel',
@@ -777,11 +771,7 @@ class ItemModelBuilder implements Builder<ItemModel, ItemModelBuilder> {
               r'ItemModel',
               'stockStatus',
             ),
-            qty: BuiltValueNullFieldError.checkNotNull(
-              qty,
-              r'ItemModel',
-              'qty',
-            ),
+            qty: qty,
             orginalPrice: BuiltValueNullFieldError.checkNotNull(
               orginalPrice,
               r'ItemModel',

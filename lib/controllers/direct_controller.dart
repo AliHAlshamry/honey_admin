@@ -55,7 +55,7 @@ class DirectController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     nameController.addListener(validateForm);
     phoneController.addListener(validateForm);
@@ -66,7 +66,7 @@ class DirectController extends GetxController {
     customPriceController.addListener(validateForm);
     ever(orderType, (_) => validateForm());
     ever(selectedPrice, (_) => validateForm());
-    fetchItems();
+    await fetchItems();
   }
 
   void setOrderType(String type) {

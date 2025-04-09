@@ -22,10 +22,10 @@ abstract class ItemModel implements Built<ItemModel, ItemModelBuilder> {
 
   String get id;
   String get name;
-  String get description;
+  String? get description;
   String get sku;
   String get stockStatus;
-  int get qty;
+  int? get qty;
   String get orginalPrice;
   String get discount;
   String? get discountedPrice;

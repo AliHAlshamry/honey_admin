@@ -49,7 +49,8 @@ class AuthController extends GetxController {
         debugPrint('Token refreshed new token: ${response.data['accessToken']}');
         final accessToken = response.data['accessToken'];
         final refreshToken = response.data['refreshToken'];
-        await postSignInProcess(accessToken, refreshToken);
+        await ApiUtils().saveUserData(accessToken, refreshToken);
+        //await postSignInProcess(accessToken, refreshToken);
         return true;
       }
     } on DioException catch (e) {
@@ -70,7 +71,8 @@ class AuthController extends GetxController {
       if (response.statusCode == 201) {
         final accessToken = response.data['accessToken'];
         final refreshToken = response.data['refreshToken'];
-        await postSignInProcess(accessToken, refreshToken);
+        //await postSignInProcess(accessToken, refreshToken);
+        await ApiUtils().saveUserData(accessToken, refreshToken);
         Get.snackbar(AppStrings.signIn, AppStrings.loginSuccessfully);
         debugPrint('Access Token: ${auth.value?.accessToken}');
         return true;
@@ -150,9 +152,9 @@ class AuthController extends GetxController {
     if (Get.isDialogOpen == true) Get.close(1);
     EasyLoading.show(status: AppStrings.logout);
     destroyAuth();
+    EasyLoading.dismiss();
     update();
     Get.toNamed('/');
-    EasyLoading.dismiss();
   }
 
   void destroyAuth() async{

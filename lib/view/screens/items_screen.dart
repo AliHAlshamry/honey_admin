@@ -52,7 +52,7 @@ class ItemCard extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.description),
+            Text(item.description ?? ''),
             Text('Price: ${item.orginalPrice} ${item.pricingCurrency}'),
             Text('Stock: ${item.qty}'),
           ],
