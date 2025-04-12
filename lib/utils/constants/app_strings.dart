@@ -1,6 +1,6 @@
 class AppStrings {
   ///bottom navigation texts
-  static const appName = 'عسل الجادرية';
+  static const appName = 'طلبات العسل';
   static const homeText = 'الرئيسية';
   static const createAccountText = 'انشاء حساب';
   static const notHaveAccountText = 'ليس لديك حساب؟';

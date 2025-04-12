@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'api/api_utils.dart';
 import 'config/routes.dart';
@@ -13,7 +14,8 @@ import 'utils/constants/app_strings.dart';
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/.env");
-  await GetStorage.init();
+  await Hive.initFlutter();
+  await Hive.openBox(AppStrings.boxKey);
   ApiUtils().initializeDio();
   runApp(const MyApp());
 }

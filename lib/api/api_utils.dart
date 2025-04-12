@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' as getx;
-import 'package:get_storage/get_storage.dart';
+import 'package:hive/hive.dart';
 import 'package:honey_admin/api/end_points.dart';
 import '../controllers/auth_controller.dart';
 import '../utils/constants/api_urls.dart';
@@ -14,8 +14,9 @@ class ApiUtils {
   ApiUtils();
 
   static late final Dio _dio;
-  final _box = GetStorage();
-
+  final _box = Hive.box(AppStrings.boxKey);
+  final String tokenKey = AppStrings.accessToken;
+  final String refreshKey = AppStrings.refreshToken;
   final apiKey = dotenv.env['API_KEY'];
 
   void initializeDio() {
@@ -24,11 +25,11 @@ class ApiUtils {
 
   Dio _init() {
     final dio = Dio(BaseOptions(baseUrl: ApiUrls.baseUrl));
-    final accessToken = _box.read('accessToken');
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) async {
           // Add the access token to the request header
+          final accessToken = await _box.get(tokenKey);
           options.headers['Authorization'] = "Bearer $accessToken";
           options.headers['x-api-key'] = apiKey;
           return handler.next(options);
@@ -70,21 +71,25 @@ class ApiUtils {
   Future<String?> refreshToken() async {
     try {
       // Retrieve the refresh token from storage
-      String? token = _box.read('refreshToken');
+      String? refreshToken = await _box.get(refreshKey);
+      String? accessKey = await _box.get(tokenKey);
 
-      if (token == null) {
+      if (refreshToken == null) {
         throw Exception("Refresh token not found.");
       }
 
       // Create a new Dio instance without interceptors
       final dio = Dio(BaseOptions(baseUrl: 'https://api.honey-comb.store/oms')); //todo add refresh token url
 
-      dio.options.headers['Authorization'] = 'Bearer $token';
+      dio.options.headers['Authorization'] = 'Bearer $accessKey';
       dio.options.headers['x-api-key'] = apiKey;
+      dio.options.headers['x-refresh-token'] = refreshToken;
       final Response response = await dio.patch(EndPoints.refreshToken);
-      saveUserData(response.data['token_access'], response.data['token_refresh']);
+      final newAccessToken = response.data['accessToken'];
+      final newRefreshToken = response.data['refreshToken'];
+      await saveUserData(newAccessToken, newRefreshToken);
       debugPrint("Token Has been refreshed successfully...");
-      return response.data['token_refresh'];
+      return newAccessToken;
     } catch (error) {
       // Log the error for debugging
       debugPrint("Error refreshing token: $error");
@@ -94,7 +99,7 @@ class ApiUtils {
   }
 
   Future<Response> post({required endpoint, dynamic data, String? token, Map<String, String>? queryParameters}) async {
-    final accessToken = _box.read('accessToken');
+    final accessToken = await _box.get(tokenKey);
     final response = await _dio.post(
       endpoint,
       queryParameters: queryParameters,
@@ -130,7 +135,7 @@ class ApiUtils {
   }
 
   Future<void> saveUserData(String? token, String refreshToken) async {
-    await _box.write(AppStrings.accessToken, token);
-    await _box.write(AppStrings.refreshToken, refreshToken);
+    await _box.put(AppStrings.accessToken, token);
+    await _box.put(AppStrings.refreshToken, refreshToken);
   }
 }

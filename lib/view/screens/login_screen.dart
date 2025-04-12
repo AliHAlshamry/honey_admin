@@ -1,6 +1,3 @@
-import 'package:get_storage/get_storage.dart';
-
-import '../../models/auth_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/constants/app_strings.dart';
 import '../../utils/constants/text_styles.dart';
@@ -11,17 +8,12 @@ import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
 import '../widgets/login_appbar_widget.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends GetView<AuthController> {
   LoginScreen({super.key});
 
-  final controller = Get.find<AuthController>();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final phoneFocusNode = FocusNode();
-
-  final auth = Rxn<Auth>();
-
-  final box = GetStorage();
 
   @override
   Widget build(BuildContext context) {

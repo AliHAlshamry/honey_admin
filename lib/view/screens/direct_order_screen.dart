@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:honey_admin/controllers/auth_controller.dart';
@@ -36,7 +37,9 @@ class DirectOrderScreen extends GetView<DirectController> {
                         }
                         if (value == 0) {
                           debugPrint('logout');
+                          EasyLoading.show(status: AppStrings.logout);
                           authController.signOut();
+                          EasyLoading.dismiss();
                         }
                       },
                     ),
