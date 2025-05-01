@@ -24,8 +24,7 @@ abstract class DirectOrderModel implements Built<DirectOrderModel, DirectOrderMo
   String get orderType;
   String get custName;
   String get custPhone;
-  String get custTown;
-  String get custCity;
+  String get cityId;
   String? get addressDetails;
   String? get note;
   BuiltList<OrderItemModel> get orderItems;

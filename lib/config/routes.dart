@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:honey_admin/view/screens/direct_order_screen.dart';
+import 'package:honey_admin/view/screens/direct_order_screen/direct_order_screen.dart';
 import '../utils/bindings/bindings.dart';
 import '../utils/constants/screen_urls.dart';
 import '../view/screens/splash_screen.dart';

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:honey_admin/controllers/items_controller.dart';
+import 'package:honey_admin/utils/constants/api_urls.dart';
 
 import '../api/api_utils.dart';
 import '../models/direct_order_model.dart';
 import '../models/item_model.dart';
 import '../models/serializers.dart';
 import '../utils/constants/app_strings.dart';
+import 'governorates_controller.dart';
 
 ///helper :
 class SelectedItem {
@@ -14,7 +16,7 @@ class SelectedItem {
   final TextEditingController quantityController;
 
   SelectedItem(this.item, {int initialQuantity = 1})
-      : quantityController = TextEditingController(text: initialQuantity.toString());
+    : quantityController = TextEditingController(text: initialQuantity.toString());
 }
 
 class DirectController extends GetxController {
@@ -36,37 +38,52 @@ class DirectController extends GetxController {
   final RxList<ItemModel> items = <ItemModel>[].obs;
   final quantityController = TextEditingController();
   final RxBool loading = false.obs;
+  final RxBool loadingItems = false.obs;
 
   // Validation
   RxBool isValid = false.obs;
   final RxList<SelectedItem> selectedItems = <SelectedItem>[].obs;
+  late GovernoratesController governoratesController;
+  late ItemController itemController;
+
+  //pagination
+  int _currentPage = 1;
+  final int _pageSize = 20;
+  bool hasMoreItems = true;
+  final ScrollController scrollController = ScrollController();
 
   final RxBool notValidPhoneNumber = false.obs;
-
-  void toggleItemSelection(ItemModel item) {
-    final existingIndex = selectedItems.indexWhere((si) => si.item.id == item.id);
-    if (existingIndex >= 0) {
-      selectedItems[existingIndex].quantityController.dispose();
-      selectedItems.removeAt(existingIndex);
-    } else {
-      selectedItems.add(SelectedItem(item));
-    }
-    validateForm();
-  }
 
   @override
   void onInit() async {
     super.onInit();
+    if (Get.isRegistered<GovernoratesController>()) {
+      governoratesController = Get.find<GovernoratesController>();
+    } else {
+      governoratesController = Get.put(GovernoratesController());
+    }
+    itemController = Get.find<ItemController>();
+    ever(itemController.totalPrice, (_) => validateForm());
     nameController.addListener(validateForm);
     phoneController.addListener(validateForm);
-    townController.addListener(validateForm);
-    cityController.addListener(validateForm);
+    addressController.addListener(validateForm);
     itemNameController.addListener(validateForm);
     itemQtyController.addListener(validateForm);
     customPriceController.addListener(validateForm);
+    noteController.addListener(validateForm);
     ever(orderType, (_) => validateForm());
     ever(selectedPrice, (_) => validateForm());
     await fetchItems();
+
+    scrollController.addListener(() {
+      debugPrint('Scroll position: ${scrollController.position.pixels} / ${scrollController.position.maxScrollExtent}');
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+        if (!loadingItems.value && hasMoreItems) {
+          debugPrint('Fetching more items...');
+          fetchItems(isPagination: true);
+        }
+      }
+    });
   }
 
   void setOrderType(String type) {
@@ -81,80 +98,119 @@ class DirectController extends GetxController {
 
   void validateForm() {
     if (orderType.value == 'REGULAR') {
-      bool quantitiesValid = selectedItems.every((si) =>
-          si.quantityController.text.isNotEmpty &&
-          int.tryParse(si.quantityController.text) != null &&
-          int.parse(si.quantityController.text) > 0);
-
-      isValid.value = nameController.text.isNotEmpty &&
+      isValid.value =
+          nameController.text.isNotEmpty &&
           phoneController.text.isNotEmpty &&
           addressController.text.isNotEmpty &&
-          cityController.text.isNotEmpty &&
-          selectedItems.isNotEmpty &&
-          quantitiesValid;
+          governoratesController.selectedDistrictId.value != '' &&
+          checkSelectedItems();
     } else {
-      isValid.value = nameController.text.isNotEmpty &&
+      isValid.value =
+          nameController.text.isNotEmpty &&
           phoneController.text.isNotEmpty &&
           itemNameController.text.isNotEmpty &&
           addressController.text.isNotEmpty &&
           itemQtyController.text.isNotEmpty &&
           customPriceController.text.isNotEmpty &&
-          cityController.text.isNotEmpty;
+          governoratesController.selectedDistrictId.value != '';
     }
   }
 
   void clearAllFields() {
     nameController.clear();
     phoneController.clear();
-    townController.clear();
-    cityController.clear();
     addressController.clear();
     noteController.clear();
     itemNameController.clear();
     itemQtyController.clear();
     customPriceController.clear();
     quantityController.clear();
-
+    cityController.clear();
+    townController.clear();
     selectedPrice.value = null;
     selectedItems.clear();
   }
 
-  Future<void> fetchItems() async {
+  Future<void> fetchItems({bool isPagination = false}) async {
+    if (loadingItems.value) return;
+
     try {
-      loading(true);
-      EasyLoading.show(status: AppStrings.loading);
-      final response = await ApiUtils().get(endpoint: 'https://api.honey-comb.store/oms/items');
-      final itemListResponse = serializers.deserializeWith(
-        ItemListResponse.serializer,
-        response.data,
+      loadingItems(true);
+      if (!isPagination) {
+        _currentPage = 1;
+        hasMoreItems = true;
+        items.clear();
+      }
+
+      final response = await ApiUtils().get(
+        endpoint: ApiUrls.itemsUrl,
+        queryParameters: {'skip': _currentPage, 'take': _pageSize},
       );
-      items.assignAll(itemListResponse?.data ?? []);
+
+      final itemListResponse = serializers.deserializeWith(ItemListResponse.serializer, response.data);
+
+      final List<ItemModel> newItems = (itemListResponse?.data ?? <ItemModel>[]).toList();
+
+      if (newItems.isNotEmpty) {
+        items.addAll(newItems);
+        _currentPage++;
+        if (newItems.length < _pageSize) {
+          hasMoreItems = false;
+        }
+      } else {
+        hasMoreItems = false;
+      }
     } catch (e) {
       Get.snackbar('Error', 'Failed to load items');
-    }finally{
-      loading(false);
-      EasyLoading.dismiss();
+    } finally {
+      loadingItems(false);
     }
   }
 
   Future<void> submitOrder() async {
     try {
+      final itemController = Get.find<ItemController>();
       String phoneNumber = '+964${phoneController.text.substring(1)}';
-      final order = DirectOrderModel((b) => b
-        ..orderType = orderType.value
-        ..custName = nameController.text
-        ..custPhone = phoneNumber
-        ..custTown = townController.text
-        ..custCity = cityController.text
-        ..addressDetails = addressController.text
-        ..note = noteController.text
-        ..orderItems.replace(selectedItems.map((si) => OrderItemModel((i) => i
-          ..name = si.item.name
-          ..qty = int.parse(si.quantityController.text)
-          ..price = double.parse(si.item.orginalPrice)))));
+      List<OrderItemModel> orderItems;
+      if (orderType.value != 'REGULAR') {
+        orderItems = [
+          OrderItemModel(
+            (p0) =>
+                p0
+                  ..name = itemNameController.text
+                  ..qty = int.parse(itemQtyController.text)
+                  ..price = double.parse(customPriceController.text.replaceAll(',', '')),
+          ),
+        ];
+      } else {
+        orderItems =
+            itemController.item.entries
+                .where((entry) => entry.value > 0)
+                .map(
+                  (entry) => OrderItemModel(
+                    (p0) =>
+                        p0
+                          ..name = entry.key.name
+                          ..qty = entry.value.toInt()
+                          ..price = double.parse(entry.key.discountedPrice ?? entry.key.orginalPrice),
+                  ),
+                )
+                .toList();
+      }
+      final order = DirectOrderModel(
+        (b) =>
+            b
+              ..orderType = orderType.value
+              ..custName = nameController.text
+              ..custPhone = phoneNumber
+              ..cityId = governoratesController.selectedDistrictId.value
+              ..addressDetails = addressController.text
+              ..note = noteController.text
+              ..orderItems.replace(orderItems),
+      );
 
       final response = await ApiUtils().post(
-        endpoint: 'https://api.honey-comb.store/oms/orders',
+        endpoint: ApiUrls.ordersUrl,
         data: serializers.serializeWith(DirectOrderModel.serializer, order) as Map<String, dynamic>,
       );
 
@@ -164,6 +220,7 @@ class DirectController extends GetxController {
         clearAllFields();
       }
     } catch (e) {
+      print(e);
       Get.snackbar('Error', 'Failed to create order');
     }
   }
@@ -172,8 +229,6 @@ class DirectController extends GetxController {
   void onClose() {
     nameController.dispose();
     phoneController.dispose();
-    townController.dispose();
-    cityController.dispose();
     addressController.dispose();
     noteController.dispose();
     itemNameController.dispose();
@@ -183,5 +238,28 @@ class DirectController extends GetxController {
       item.quantityController.dispose();
     }
     super.onClose();
+  }
+
+  bool checkSelectedItems() {
+    List<OrderItemModel> orderItems =
+        itemController.item.entries
+            .where((entry) => entry.value > 0)
+            .map(
+              (entry) => OrderItemModel(
+                (p0) =>
+                    p0
+                      ..name = entry.key.name
+                      ..qty = entry.value.toInt()
+                      ..price = double.parse(entry.key.discountedPrice ?? entry.key.orginalPrice),
+              ),
+            )
+            .toList();
+    return orderItems.isNotEmpty;
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

@@ -8,6 +8,7 @@ import 'package:built_value/standard_json_plugin.dart';
 
 import 'auth_model.dart';
 import 'direct_order_model.dart';
+import 'governorate_model.dart';
 import 'item_model.dart';
 import 'login_model.dart';
 
@@ -22,7 +23,8 @@ part 'serializers.g.dart';
   OrderItemModel,
   ItemListResponse,
   ItemModel,
-  AttachmentModel
+  AttachmentModel,
+  GovernorateModel
 ])
 final Serializers serializers = (_$serializers.toBuilder()
   ..add(Iso8601DateTimeSerializer())

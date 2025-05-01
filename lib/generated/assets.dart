@@ -3,19 +3,32 @@ class Assets {
   Assets._();
 
   static const String assets = 'assets/.env';
-  static const String fontsHakkakbookBook = 'assets/fonts/hakkakbook-Book.otf';
-  static const String fontsHakkakheavyHeavy = 'assets/fonts/hakkakheavy-Heavy.otf';
-  static const String fontsHakkakmediumMedium = 'assets/fonts/hakkakmedium-Medium.otf';
+  static const String fontsIBMPlexSansArabicBold = 'assets/fonts/IBMPlexSansArabic-Bold.ttf';
+  static const String fontsIBMPlexSansArabicExtraLight = 'assets/fonts/IBMPlexSansArabic-ExtraLight.ttf';
+  static const String fontsIBMPlexSansArabicLight = 'assets/fonts/IBMPlexSansArabic-Light.ttf';
+  static const String fontsIBMPlexSansArabicMedium = 'assets/fonts/IBMPlexSansArabic-Medium.ttf';
+  static const String fontsIBMPlexSansArabicRegular = 'assets/fonts/IBMPlexSansArabic-Regular.ttf';
+  static const String fontsIBMPlexSansArabicSemiBold = 'assets/fonts/IBMPlexSansArabic-SemiBold.ttf';
+  static const String fontsIBMPlexSansArabicThin = 'assets/fonts/IBMPlexSansArabic-Thin.ttf';
   static const String iconsIcAccountOutline = 'assets/icons/ic_account_outline.svg';
+  static const String iconsIcDollar = 'assets/icons/ic_dollar.svg';
+  static const String iconsIcEdit = 'assets/icons/ic_edit.svg';
   static const String iconsIcEyeClosed = 'assets/icons/ic_eye_closed.svg';
+  static const String iconsIcHoney = 'assets/icons/ic_honey.svg';
+  static const String iconsIcLocation = 'assets/icons/ic_location.svg';
   static const String iconsIcLogout = 'assets/icons/ic_logout.svg';
+  static const String iconsIcMinus = 'assets/icons/ic_minus.svg';
   static const String iconsIcPhone = 'assets/icons/ic_phone.svg';
+  static const String iconsIcPlus = 'assets/icons/ic_plus.svg';
   static const String iconsIcProfile = 'assets/icons/ic_profile.svg';
+  static const String iconsIcRoute = 'assets/icons/ic_route.svg';
   static const String iconsLogo = 'assets/icons/logo.png';
+  static const String imagesAppIcon = 'assets/images/app_icon.png';
   static const String imagesFooterImage = 'assets/images/footer_image.svg';
   static const String imagesFooterImagePng = 'assets/images/footer_image_png.png';
   static const String imagesHoney = 'assets/images/honey.jpeg';
   static const String imagesProfile = 'assets/images/profile.svg';
   static const String imagesToolbarImage = 'assets/images/toolbar_image.svg';
+  static const String lottieCartIn = 'assets/images/lottie/cartIn.json';
 
 }
