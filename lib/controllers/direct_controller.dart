@@ -54,6 +54,19 @@ class DirectController extends GetxController {
 
   final RxBool notValidPhoneNumber = false.obs;
 
+  final orderButtonKey = GlobalKey();
+
+  void scrollToButton() {
+    final context = orderButtonKey.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   void onInit() async {
     super.onInit();
@@ -159,6 +172,7 @@ class DirectController extends GetxController {
         }
       } else {
         hasMoreItems = false;
+        loadingItems(false);
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to load items');

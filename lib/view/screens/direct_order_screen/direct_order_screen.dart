@@ -23,49 +23,52 @@ class DirectOrderScreen extends GetView<DirectController> {
     return Obx(
       () =>
           !controller.loading.value
-              ? Scaffold(
-                backgroundColor: AppColors.bgColor,
-                appBar: AppBar(
-                  title: Text(AppStrings.directOrder),
-                  actions: [
-                    PopupMenuButton(
-                      icon: const Icon(Icons.more_vert),
-                      itemBuilder: (context) {
-                        return [const PopupMenuItem<int>(value: 0, child: Text(AppStrings.logoutStr))];
-                      },
-                      onSelected: (value) async {
-                        final AuthController authController;
-                        if (Get.isRegistered()) {
-                          authController = Get.find<AuthController>();
-                        } else {
-                          authController = Get.put(AuthController());
-                        }
-                        if (value == 0) {
-                          debugPrint('logout');
-                          EasyLoading.show(status: AppStrings.logout);
-                          authController.signOut();
-                          EasyLoading.dismiss();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Obx(
-                    () => ListView(
-                      controller: controller.scrollController,
-                      children: [
-                        OrderTypeSelector(),
-                        CustomerInfoFields(),
-                        AddressFields(),
-                        if (controller.orderType.value != 'REGULAR') BuildItemInfoFields(),
-                        if (controller.orderType.value == 'REGULAR') BuildItemSelection(),
-                      ],
+              ? GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Scaffold(
+                  backgroundColor: AppColors.bgColor,
+                  appBar: AppBar(
+                    title: Text(AppStrings.directOrder),
+                    actions: [
+                      PopupMenuButton(
+                        icon: const Icon(Icons.more_vert),
+                        itemBuilder: (context) {
+                          return [const PopupMenuItem<int>(value: 0, child: Text(AppStrings.logoutStr))];
+                        },
+                        onSelected: (value) async {
+                          final AuthController authController;
+                          if (Get.isRegistered()) {
+                            authController = Get.find<AuthController>();
+                          } else {
+                            authController = Get.put(AuthController());
+                          }
+                          if (value == 0) {
+                            debugPrint('logout');
+                            EasyLoading.show(status: AppStrings.logout);
+                            authController.signOut();
+                            EasyLoading.dismiss();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  body: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Obx(
+                      () => ListView(
+                        controller: controller.scrollController,
+                        children: [
+                          OrderTypeSelector(),
+                          CustomerInfoFields(),
+                          AddressFields(),
+                          if (controller.orderType.value != 'REGULAR') BuildItemInfoFields(),
+                          if (controller.orderType.value == 'REGULAR') BuildItemSelection(),
+                        ],
+                      ),
                     ),
                   ),
+                  bottomNavigationBar: bottomNavBarWidget(),
                 ),
-                bottomNavigationBar: bottomNavBarWidget(),
               )
               : const Scaffold(body: Center()),
     );
@@ -111,6 +114,7 @@ class DirectOrderScreen extends GetView<DirectController> {
   Widget _buildSubmitButton() {
     return Obx(
       () => ElevatedButton(
+        key: controller.orderButtonKey,
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(!controller.isValid.value ? Colors.grey : AppColors.yellow500Color),
         ),

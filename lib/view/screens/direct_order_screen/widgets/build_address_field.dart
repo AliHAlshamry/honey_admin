@@ -49,6 +49,7 @@ class AddressFields extends GetView<DirectController> {
             labelText: AppStrings.orderNotes,
             prefixIcon: CustomSvgIcon(assetsPath: './assets/icons/ic_edit.svg'),
           ),
+          onSubmitted: (_) => controller.scrollToButton(),
           maxLines: 2,
         ),
         const SizedBox(height: 8),

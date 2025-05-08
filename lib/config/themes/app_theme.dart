@@ -10,7 +10,7 @@ class AppTheme {
   );
 
   ThemeData lightTheme = ThemeData(
-    fontFamily: 'IBMPlexSansArabic',
+    //fontFamily: 'IBMPlexSansArabic',
     scaffoldBackgroundColor: AppColors.bgColor,
 
     ///app bar theme

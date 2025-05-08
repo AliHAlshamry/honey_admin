@@ -107,10 +107,11 @@ class CartItem extends StatelessWidget {
                                 children: [
                                   CustomInkwell(
                                     onTap: () {
-                                      if (controller.item.containsKey(product)) {
+                                      if (product.qty == null) {
+                                        controller.incrementQuantity(product);
+                                      } else if (controller.item.containsKey(product)) {
                                         double currentQty = controller.item[product] ?? 0;
-                                        if (product.qty != null &&
-                                            (product.qty ?? 0) > 0 &&
+                                        if ((product.qty ?? 0) > 0 &&
                                             currentQty < (product.qty ?? 0)) {
                                           controller.incrementQuantity(product);
                                         }
@@ -123,7 +124,7 @@ class CartItem extends StatelessWidget {
                                       height: 28,
                                       width: 28,
                                       colorFilter:
-                                          (product.qty ?? 0) > 0
+                                          (product.qty == null || ((product.qty ?? 0) > 0))
                                               ? null
                                               : ColorFilter.mode(AppColors.grey600Color, BlendMode.srcIn),
                                     ),
