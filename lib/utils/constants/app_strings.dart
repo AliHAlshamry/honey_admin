@@ -93,8 +93,9 @@ class AppStrings {
 
   static const regular = 'عادي';
   static const manual = 'مخصص';
-  static const city = 'المدينة';
-  static const town = 'تفاصيل المنطقة';
+  static const city = 'المحافظة';
+  static const town = 'المنطقة';
+  static const noAvailableInfo = 'منتج غير محدود';
   static const addressDetails = 'تفاصيل العنوان';
   static const orderNotes = 'ملاحظات اضافية';
   static const itemName = 'أسم المنتج';
@@ -109,4 +110,5 @@ class AppStrings {
   static const firebaseTokenKey = 'firebaseToken';
 
   static const loading = "يرجى الأنتظار";
+  static const availableQuantity = "الكمية المتوفرة";
 }

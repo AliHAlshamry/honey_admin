@@ -2,7 +2,7 @@ name: honey_admin
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.3
 
 environment:
   sdk: ^3.7.0
@@ -16,6 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.7
   persistent_bottom_nav_bar: ^6.2.1
+  infinite_scroll_pagination: ^4.0.0
+  cached_network_image: ^3.3.1
   built_value: ^8.4.4
   built_collection: ^5.1.1
   intl: ^0.19.0
@@ -31,6 +33,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   hive: ^2.2.3 #using hive instead of get storage package because get storage have a problem in refresh token.
   hive_flutter: ^1.1.0
+  lottie: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -54,15 +57,18 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/lottie/
     - assets/icons/
     - assets/.env
 
   fonts:
-    - family: hakkak
+    - family: IBMPlexSansArabic
       fonts:
-        - asset: assets/fonts/hakkakbook-Book.otf
-          weight: 200
-        - asset: assets/fonts/hakkakheavy-Heavy.otf
+        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
           weight: 500
-        - asset: assets/fonts/hakkakmedium-Medium.otf
-          weight: 900
+        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
+          weight: 700

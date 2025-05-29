@@ -1,38 +1,81 @@
-// items_controller.dart
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
-import '../../api/api_utils.dart';
 import '../../models/item_model.dart';
-import '../models/serializers.dart';
 
-class ItemsController extends GetxController {
-  final RxList<ItemModel> items = <ItemModel>[].obs;
-  final RxBool isLoading = false.obs;
-  final RxString error = ''.obs;
+class ItemController extends GetxController with StateMixin<Map<ItemModel, double>> {
+  late RxMap<ItemModel, double> item;
+  final RxDouble totalPrice = 0.0.obs;
 
-  Future<void> fetchItems() async {
-    try {
-      isLoading.value = true;
-      error.value = '';
-
-      final response = await ApiUtils().get(
-        endpoint: 'https://api.honey-comb.store/oms/items',
-      );
-      // Deserialize the response using built_value serializers
-      final itemListResponse = serializers.deserializeWith(
-        ItemListResponse.serializer,
-        response.data,
-      );
-
-      if (itemListResponse != null) {
-        items.assignAll(itemListResponse.data.cast<ItemModel>().toList());
-      }
-
-    } on DioException catch (e) {
-      error.value = 'Failed to load items: ${e.response?.data ?? e.message}';
-    } finally {
-      isLoading.value = false;
+  @override
+  void onInit() {
+    super.onInit();
+    item = <ItemModel, double>{}.obs;
+    if (item.isEmpty) {
+      change(item, status: RxStatus.empty());
     }
+  }
+
+  void incrementQuantity(ItemModel product) {
+    bool needsUpdate = false;
+    if (item.isEmpty) needsUpdate = true;
+    if (!item.containsKey(product)) {
+      item.addAll({product: 1});
+    } else {
+      item[product] = item[product]! + 1;
+    }
+    if (needsUpdate) change(item, status: RxStatus.success());
+    updateTotalPrice();
+  }
+
+  void addToCart(ItemModel product) {
+    bool needsUpdate = false;
+    if (item.isEmpty) needsUpdate = true;
+    if (!item.containsKey(product)) {
+      item.addAll({product: 1});
+    } else {
+      item[product] = item[product]! + 1;
+    }
+    if (needsUpdate) change(item, status: RxStatus.success());
+    updateTotalPrice();
+  }
+
+  void decrementQuantity(ItemModel product) {
+    if (item.containsKey(product) && item[product]! > 0) {
+      item[product] = item[product]! - 1;
+      if (item[product] == 0) {
+        //remove(product);
+      }
+    }
+    updateTotalPrice();
+  }
+
+  void updateTotalPrice() {
+    double total = 0.0;
+    item.forEach((item, quantity) {
+      total += double.parse(item.discountedPrice ?? item.orginalPrice).round() * quantity.round();
+    });
+    totalPrice.value = total;
+    update();
+  }
+
+  RxInt get subTotalPrice {
+    int total = 0;
+    item.forEach((item, quantity) {
+      total += double.parse(item.discountedPrice ?? item.orginalPrice).round() * quantity.round();
+    });
+    return total.obs;
+  }
+
+  void remove(ItemModel product) {
+    item.remove(product);
+    if (item.isEmpty) {
+      change(item, status: RxStatus.empty());
+    }
+    updateTotalPrice();
+    item.refresh();
+  }
+
+  void clearData() {
+    item.clear();
   }
 }
