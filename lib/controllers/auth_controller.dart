@@ -1,44 +1,58 @@
 import 'package:hive/hive.dart';
-
-import '../../utils/constants/app_colors.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import '../api/api_utils.dart';
 import '../api/end_points.dart';
+import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_strings.dart';
+import '../view/screens/login_screen.dart';
 
 class AuthController extends GetxController {
   final _box = Hive.box(AppStrings.boxKey);
   final String tokenKey = AppStrings.accessToken;
   final String refreshKey = AppStrings.refreshToken;
+  final String usernameKey = 'saved_username';
+  final String passwordKey = 'saved_password';
+  final String rememberMeKey = 'remember_me';
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  Future<dynamic> refreshToken() async {
-    try {
-      final response = await ApiUtils().patch(
-        endpoint: EndPoints.refreshToken
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
+  final rememberMe = false.obs;
 
-        debugPrint('Token refreshed new token: ${response.data['accessToken']}');
-        final accessToken = response.data['accessToken'];
-        final refreshToken = response.data['refreshToken'];
-        await ApiUtils().saveUserData(accessToken, refreshToken);
-        //await postSignInProcess(accessToken, refreshToken);
-        return true;
-      }
-    } on DioException catch (e) {
-      printError(info: 'message: ${e.message}');
-      rethrow;
-    }
-    return false;
+  @override
+  void onInit() {
+    super.onInit();
+    _loadSavedCredentials();
   }
 
-  Future<bool> signIn(phone, password, token) async {
-    //EasyLoading.show(status: AppStrings.signIn);
+  void _loadSavedCredentials() {
+    final saved = _box.get(rememberMeKey, defaultValue: false);
+    rememberMe.value = saved;
+
+    if (saved) {
+      final username = _box.get(usernameKey);
+      final password = _box.get(passwordKey);
+      phoneController.text = username ?? '';
+      passwordController.text = password ?? '';
+    }
+  }
+
+
+  Future<void> _saveLoginInfo(String username, String password) async {
+    await _box.put(usernameKey, username);
+    await _box.put(passwordKey, password);
+    await _box.put(rememberMeKey, true);
+  }
+
+  Future<void> clearSavedLoginInfo() async {
+    await _box.delete(usernameKey);
+    await _box.delete(passwordKey);
+    await _box.put(rememberMeKey, false);
+  }
+
+  Future<bool> signIn(String phone, String password, String token) async {
     try {
-      //final fcmToken = await box.read('FCMToken');
       final response = await ApiUtils().post(
         endpoint: EndPoints.login,
         data: {"username": phone, "password": password},
@@ -46,44 +60,20 @@ class AuthController extends GetxController {
       if (response.statusCode == 201) {
         final accessToken = response.data['accessToken'];
         final refreshToken = response.data['refreshToken'];
-        //await postSignInProcess(accessToken, refreshToken);
         await ApiUtils().saveUserData(accessToken, refreshToken);
         Get.snackbar(AppStrings.signIn, AppStrings.loginSuccessfully);
-        return true;
-      }
-    } on DioException catch (e) {
-      printError(info: 'Dio Error! ${e.toString()}');
-      //Get.snackbar(AppStrings.error, e.toString(), duration: Duration(seconds: 60));
-    } catch (e) {
-      debugPrint(e.toString());
-      Get.snackbar(AppStrings.error, AppStrings.statusSomethingWrong);
-    } finally {
-      EasyLoading.dismiss();
-    }
-    return false;
-  }
 
-  Future<bool> resetPassword(phone, password) async {
-    EasyLoading.show(status: AppStrings.resetPassword);
-    try {
-      final fcmToken = await _box.get('FCMToken');
-      final response = await ApiUtils().post(
-        endpoint: EndPoints.resetPassword,
-        data: {"phone": phone, "password": password, 'token': fcmToken ?? ''},
-      );
-      if (response.statusCode == 200 && response.data['hasError'] != true) {
-        Get.snackbar(AppStrings.congratulations, AppStrings.passwordChangedSuccessfully);
+        if (rememberMe.value) {
+          await _saveLoginInfo(phone, password);
+        } else {
+          await clearSavedLoginInfo();
+        }
+
         return true;
-      } else {
-        Get.snackbar(AppStrings.error, response.data['message']);
-        return false;
       }
-    } on DioException catch (e) {
-      printError(info: 'Dio Error! ${e.response!.data.toString()}');
-      Get.snackbar(AppStrings.error, AppStrings.statusSomethingWrong);
     } catch (e) {
       debugPrint(e.toString());
-      EasyLoading.show(status: e.toString());
+      Get.snackbar(AppStrings.error, AppStrings.statusSomethingWrong);
     } finally {
       EasyLoading.dismiss();
     }
@@ -106,23 +96,6 @@ class AuthController extends GetxController {
       cancel: TextButton(onPressed: () => Get.close(1), child: Text(AppStrings.cancel)),
     );
   }
-
-/*  void deleteAccount() async {
-    EasyLoading.show(status: AppStrings.verifyingCode);
-    try {
-      final res = await ApiUtils().delete(endpoint: '${EndPoints.deleteDataUrl}/${auth.value?.id}');
-
-      if (res.statusCode != 201 && res.statusCode != 200) {
-        throw Exception();
-      }
-      destroyAuth();
-      Get.offAllNamed(ScreenUrls.mainUrl);
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      EasyLoading.dismiss();
-    }
-  }*/
 
   void _signOut() async {
     if (Get.isDialogOpen == true) Get.close(1);

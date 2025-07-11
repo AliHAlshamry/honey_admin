@@ -2,7 +2,7 @@ name: honey_admin
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.3
+version: 1.0.3+10
 
 environment:
   sdk: ^3.7.0
@@ -34,6 +34,7 @@ dependencies:
   hive: ^2.2.3 #using hive instead of get storage package because get storage have a problem in refresh token.
   hive_flutter: ^1.1.0
   lottie: ^3.0.0
+  flutter_secure_storage: ^9.2.4
 
 dev_dependencies:
   flutter_test:
