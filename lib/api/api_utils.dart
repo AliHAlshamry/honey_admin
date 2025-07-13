@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' as getx;
 import 'package:hive/hive.dart';
+import 'package:honey_admin/api/api.dart';
 import 'package:honey_admin/api/end_points.dart';
 import '../controllers/auth_controller.dart';
 import '../utils/constants/api_urls.dart';
@@ -79,7 +80,7 @@ class ApiUtils {
       }
 
       // Create a new Dio instance without interceptors
-      final dio = Dio(BaseOptions(baseUrl: 'https://api.honey-comb.store/oms')); //todo add refresh token url
+      final dio = Dio(BaseOptions(baseUrl: Api.baseUrl));
 
       dio.options.headers['Authorization'] = 'Bearer $accessKey';
       dio.options.headers['x-api-key'] = apiKey;

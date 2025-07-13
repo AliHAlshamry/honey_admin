@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/release
 /assets/.env
 *.g.dart
+/ios/build/ios/XCBuildData/PIFCache/*

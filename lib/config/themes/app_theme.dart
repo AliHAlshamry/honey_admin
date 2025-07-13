@@ -55,11 +55,12 @@ class AppTheme {
     textTheme: const TextTheme(),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        minimumSize: const WidgetStatePropertyAll(
-          Size.fromHeight(50),
+        minimumSize: const WidgetStatePropertyAll(Size.fromHeight(50)),
+        backgroundColor: const WidgetStatePropertyAll(AppColors.yellow500Color),
+        foregroundColor: const WidgetStatePropertyAll(Colors.white),
+        textStyle: const WidgetStatePropertyAll(
+          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
-        backgroundColor:
-            const WidgetStatePropertyAll(AppColors.yellow500Color),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

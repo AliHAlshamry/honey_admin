@@ -111,4 +111,81 @@ class AppStrings {
 
   static const loading = "يرجى الأنتظار";
   static const availableQuantity = "الكمية المتوفرة";
+  static const orders = "الطلبات";
+  static const addOrder = "أضافة طلبات";
+  static const custom = "مخصص";
+  static const cancelled = "ملغي";
+  static const preparing = "يتم التحضير";
+  static const pending = "معلق";
+  static const ready = "مكتمل";
+  static const delivery = "يتم التوصيل";
+  static const delivered = "تم التوصيل";
+  static const searchHint = "بحث عن الطلبات";
+  static const orderType = "نوع الطلب";
+  static const status = "الحالة";
+  static const sort = "فرز";
+  static const sortBy = "فرز حسب";
+  static const orderBy = "الترتيب";
+  static const filterBy = "فلترة حسب";
+  static const clearAll = "حذف الكل";
+  static const asc = "تصاعدي";
+  static const desc = "تنازلي";
+  static const name = "الأسم";
+  static const apply = "تطبيق";
+  static const all = "الكل";
+  static const sortOrder = "ترتيب الفرز";
+  static const enterOrderNumberOrEnterName = "أدخل رقم الطلب أو اسم الزبون";
+  static const errorFetchOrders = "خطأ في جلب الطلبات";
+  static const retry = "إعادة المحاولة";
+  static const noOrders = "لا توجد طلبات";
+  static const errorLoadingMoreOrders = "خطأ في تحميل المزيد من الطلبات";
+  static const addCustomProduct = "انشاء منتج";
+  static const addNewProduct = "أضافة منتج جديد";
+  static const editCustomProduct = "تعديل منتج";
+  static const productName = "أسم منتج";
+  static const enterProductName = "أدخل أسم المنتج";
+  static const enterProductDescriptionHint = "تفاصيل المنتج (اختياري)";
+  static const enterDescription = "تفاصيل المنتج";
+  static const update = "تحديث";
+  static const add = "أضافة";
+  static const enterNameHint = "الرجاء أدخال الأسم";
+  static const enterPriceHint = "الرجاء أدخال السعر";
+  static const enterQuantityHint = "الرجاء أدخال العدد";
+  static const addedProductSuccessfully = "تم أضافة المنتج بنجاح";
+  static const updateProductSuccessfully = "تم تحديث المنتج بنجاح";
+  static const deleteItem = "حذف المنتج";
+  static const deleteItemHint = "هل أنت متأكد من رغبتك بحذف المنتج";
+  static const delete = "حذف";
+  static const customItems = "المنتجات المخصصة";
+  static const cancelOrder = "الغاء الطلب";
+
+  static String getOrderStatus(String status) {
+    switch (status.toUpperCase()) {
+      case 'CANCELLED':
+        return cancelled;
+      case 'PREPARING':
+        return preparing;
+      case 'PENDING':
+        return pending;
+      case 'READY':
+        return ready;
+      case 'DELIVERY':
+        return delivery;
+      case 'DELIVERED':
+        return delivered;
+      default:
+        return status;
+    }
+  }
+
+  static String getOrderType(String type) {
+    switch (type.toUpperCase()) {
+      case 'REGULAR':
+        return regular;
+      case 'MANUAL':
+        return custom;
+      default:
+        return type;
+    }
+  }
 }

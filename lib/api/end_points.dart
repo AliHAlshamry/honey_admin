@@ -26,6 +26,9 @@ class EndPoints {
   static const checkCouponValidation = "/Coupon/CheckCoupon";
   static const createOrder = "/Order/Add";
   static const deleteDataUrl = '/Customer/finalDelete/';
+  static const ordersUser = '/orders/user';
+  static const orders = '/orders/';
+  static const status = '/status';
 
 
 

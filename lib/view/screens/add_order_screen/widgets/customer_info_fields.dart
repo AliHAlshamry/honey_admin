@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:honey_admin/view/screens/direct_order_screen/widgets/custom_svg_icon.dart';
 
 import '../../../../controllers/direct_controller.dart';
 import '../../../../utils/constants/app_strings.dart';
+import 'custom_svg_icon.dart';
 
 class CustomerInfoFields extends GetView<DirectController> {
   const CustomerInfoFields({super.key});

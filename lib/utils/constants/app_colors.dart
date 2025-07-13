@@ -41,4 +41,11 @@ class AppColors {
   static const yellow800Color = Color(0xFF885110);
   static const yellow900Color = Color(0xFF683E0C);
 
+  static const redColor = Color(0xFFFE6565);
+  static Color greenSecondary = const Color(0xFF17663A);
+  static Color brandRed = const Color(0xFFFEF0F4);
+  static Color backgroundGreen = const Color(0xFFEEFBF4);
+  static Color iconError = const Color(0xFFF53D6B);
+  static Color greenSuccess = const Color(0xFF2DCA72);
+
 }

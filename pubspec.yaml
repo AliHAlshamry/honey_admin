@@ -2,7 +2,7 @@ name: honey_admin
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.3+10
+version: 1.0.3+11
 
 environment:
   sdk: ^3.7.0
@@ -47,7 +47,8 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/images/app_icon.png"
-  adaptive_icon_background: "#FF7941D"
+  adaptive_icon_background: "#FF7941D1"
+  remove_alpha_ios: true
 
 flutter:
 

@@ -4,7 +4,7 @@ class ScreenUrls{
   static const otpUrl = '/otp';
   static const registerUrl = '/register';
   static const productDetailsUrl = '/product_details';
-  static const mainUrl = '/main';
+  static const homeUrl = '/home';
   static const cartUrl = '/cart';
   static const checkout = '/checkout';
   static const account = '/account';

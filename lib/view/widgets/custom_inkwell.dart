@@ -5,12 +5,14 @@ class CustomInkwell extends StatelessWidget {
     super.key,
     required this.child,
     required this.onTap,
+    this.onLongTap,
     this.inkwellRadius = 16.0,
   });
 
   final double inkwellRadius;
   final Widget child;
   final VoidCallback onTap;
+  final VoidCallback? onLongTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class CustomInkwell extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(inkwellRadius),
               onTap:onTap,
+              onLongPress: onLongTap,
             ),
           ),
         ),

@@ -22,8 +22,11 @@ class Assets {
   static const String iconsIcPlus = 'assets/icons/ic_plus.svg';
   static const String iconsIcProfile = 'assets/icons/ic_profile.svg';
   static const String iconsIcRoute = 'assets/icons/ic_route.svg';
+  static const String iconsIcSearch = 'assets/icons/ic_search.svg';
+  static const String iconsIcTicket = 'assets/icons/ic_ticket.svg';
   static const String iconsLogo = 'assets/icons/logo.png';
   static const String imagesAppIcon = 'assets/images/app_icon.png';
+  static const String imagesEmptyCart = 'assets/images/empty_cart.svg';
   static const String imagesFooterImage = 'assets/images/footer_image.svg';
   static const String imagesFooterImagePng = 'assets/images/footer_image_png.png';
   static const String imagesHoney = 'assets/images/honey.jpeg';

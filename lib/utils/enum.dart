@@ -1,0 +1,3 @@
+enum MessageType { error, success }
+
+enum OrderStatus {NEW, PREPARING, READY, SUSPENDED, CANCELLED, DELIVERING, RETURNED, RESTOCKED, DELIVERED}

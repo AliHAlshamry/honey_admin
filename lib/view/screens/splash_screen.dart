@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 2)); // Optional delay
 
     if (token != '' && token != null) {
-      Get.offAllNamed(ScreenUrls.mainUrl);
+      Get.offAllNamed(ScreenUrls.homeUrl);
     } else {
       Get.offAllNamed(ScreenUrls.loginUrl);
     }

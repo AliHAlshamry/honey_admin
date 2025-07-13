@@ -1,4 +1,5 @@
 import '../../controllers/auth_controller.dart';
+import '../../controllers/cart_controller.dart';
 import '../../controllers/direct_controller.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +12,7 @@ class HomeBinding extends Bindings {
     Get.put(ItemController());
     Get.put(DirectController());
     Get.put(GovernoratesController());
+    Get.put(CartController());
   }
 }
 

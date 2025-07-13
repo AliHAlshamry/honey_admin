@@ -15,13 +15,13 @@ class ItemController extends GetxController with StateMixin<Map<ItemModel, doubl
     }
   }
 
-  void incrementQuantity(ItemModel product) {
+  void incrementQuantity(ItemModel product, {double? quantity}) {
     bool needsUpdate = false;
     if (item.isEmpty) needsUpdate = true;
     if (!item.containsKey(product)) {
-      item.addAll({product: 1});
+      item.addAll({product: quantity ?? 1});
     } else {
-      item[product] = item[product]! + 1;
+      item[product] = item[product]! + (quantity ?? 1);
     }
     if (needsUpdate) change(item, status: RxStatus.success());
     updateTotalPrice();

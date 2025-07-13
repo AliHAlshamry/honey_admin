@@ -20,9 +20,6 @@ class SelectedItem {
 }
 
 class DirectController extends GetxController {
-  // Order Type
-  final RxString orderType = 'REGULAR'.obs;
-
   // Form Controllers
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
@@ -59,11 +56,7 @@ class DirectController extends GetxController {
   void scrollToButton() {
     final context = orderButtonKey.currentContext;
     if (context != null) {
-      Scrollable.ensureVisible(
-        context,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
+      Scrollable.ensureVisible(context, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
     }
   }
 
@@ -84,7 +77,6 @@ class DirectController extends GetxController {
     itemQtyController.addListener(validateForm);
     customPriceController.addListener(validateForm);
     noteController.addListener(validateForm);
-    ever(orderType, (_) => validateForm());
     ever(selectedPrice, (_) => validateForm());
     await fetchItems();
 
@@ -99,34 +91,17 @@ class DirectController extends GetxController {
     });
   }
 
-  void setOrderType(String type) {
-    orderType.value = type;
-    selectedPrice.value = null;
-    customPriceController.clear();
-  }
-
   void selectPrice(double price) {
     selectedPrice.value = price;
   }
 
   void validateForm() {
-    if (orderType.value == 'REGULAR') {
-      isValid.value =
-          nameController.text.isNotEmpty &&
-          phoneController.text.isNotEmpty &&
-          addressController.text.isNotEmpty &&
-          governoratesController.selectedDistrictId.value != '' &&
-          checkSelectedItems();
-    } else {
-      isValid.value =
-          nameController.text.isNotEmpty &&
-          phoneController.text.isNotEmpty &&
-          itemNameController.text.isNotEmpty &&
-          addressController.text.isNotEmpty &&
-          itemQtyController.text.isNotEmpty &&
-          customPriceController.text.isNotEmpty &&
-          governoratesController.selectedDistrictId.value != '';
-    }
+    isValid.value =
+        nameController.text.isNotEmpty &&
+        phoneController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
+        governoratesController.selectedDistrictId.value != '' &&
+        checkSelectedItems();
   }
 
   void clearAllFields() {
@@ -183,38 +158,21 @@ class DirectController extends GetxController {
 
   Future<void> submitOrder() async {
     try {
-      final itemController = Get.find<ItemController>();
       String phoneNumber = '+964${phoneController.text.substring(1)}';
       List<OrderItemModel> orderItems;
-      if (orderType.value != 'REGULAR') {
-        orderItems = [
-          OrderItemModel(
-            (p0) =>
-                p0
-                  ..name = itemNameController.text
-                  ..qty = int.parse(itemQtyController.text)
-                  ..price = double.parse(customPriceController.text.replaceAll(',', '')),
-          ),
-        ];
-      } else {
-        orderItems =
-            itemController.item.entries
-                .where((entry) => entry.value > 0)
-                .map(
-                  (entry) => OrderItemModel(
-                    (p0) =>
-                        p0
-                          ..name = entry.key.name
-                          ..qty = entry.value.toInt()
-                          ..price = double.parse(entry.key.discountedPrice ?? entry.key.orginalPrice),
-                  ),
-                )
-                .toList();
-      }
+      orderItems = [
+        OrderItemModel(
+          (p0) =>
+              p0
+                ..name = itemNameController.text
+                ..qty = int.parse(itemQtyController.text)
+                ..price = double.parse(customPriceController.text.replaceAll(',', '')),
+        ),
+      ];
       final order = DirectOrderModel(
         (b) =>
             b
-              ..orderType = orderType.value
+              ..orderType = 'REGULAR'
               ..custName = nameController.text
               ..custPhone = phoneNumber
               ..cityId = governoratesController.selectedDistrictId.value
@@ -234,7 +192,6 @@ class DirectController extends GetxController {
         clearAllFields();
       }
     } catch (e) {
-      print(e);
       Get.snackbar('Error', 'Failed to create order');
     }
   }

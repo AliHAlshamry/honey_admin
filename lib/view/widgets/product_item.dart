@@ -17,7 +17,7 @@ class CartItem extends StatelessWidget {
   CartItem({super.key, required this.product, required this.quantity});
 
   final ItemModel product;
-  final double quantity;
+  final int quantity;
   final controller = Get.find<ItemController>();
 
   @override
@@ -46,16 +46,16 @@ class CartItem extends StatelessWidget {
                         bottomRight: Radius.circular(16.0),
                         // bottomLeft: Radius.zero,
                       ),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl:
-                            product.attachments.isNotEmpty
-                                ? '${ApiUrls.attachmentsUrl}${product.attachments[0].url}'
-                                : '',
-                        //progressIndicatorBuilder: (context, url, progress) => CircularProgressIndicator(),
-                        errorWidget:
-                            (context, url, error) => Image.asset('assets/images/honey.jpeg', fit: BoxFit.cover),
-                      ),
+                      child:
+                          product.attachments.isNotEmpty
+                              ? CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl:
+                                    product.attachments.isNotEmpty
+                                        ? '${ApiUrls.attachmentsUrl}${product.attachments[0].url}'
+                                        : '',
+                              )
+                              : Container(color: AppColors.grey500Color),
                     ),
                   ),
                 ),
@@ -111,8 +111,7 @@ class CartItem extends StatelessWidget {
                                         controller.incrementQuantity(product);
                                       } else if (controller.item.containsKey(product)) {
                                         double currentQty = controller.item[product] ?? 0;
-                                        if ((product.qty ?? 0) > 0 &&
-                                            currentQty < (product.qty ?? 0)) {
+                                        if ((product.qty ?? 0) > 0 && currentQty < (product.qty ?? 0)) {
                                           controller.incrementQuantity(product);
                                         }
                                       } else if ((product.qty ?? 0) > 0) {
