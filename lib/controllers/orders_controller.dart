@@ -25,7 +25,6 @@ class OrdersController extends GetxController {
   final sortOrder = 'asc'.obs;
 
   /// New filter properties
-  final RxString selectedOrderType = ''.obs; // '', 'regular', 'custom'
   final RxString selectedStatus = ''.obs; // '', 'pending', 'preparing', 'delivering', 'complete'
 
   /// Loading flag
@@ -35,8 +34,7 @@ class OrdersController extends GetxController {
   // final Rxn<StatusModel> selectedStatus = Rxn<StatusModel>();
 
   /// Filter options
-  final List<String> orderTypes = ['REGULAR', 'MANUAL'];
-  final List<String> orderStatuses = ['pending', 'preparing', 'delivery', 'delivered', 'cancelled', 'ready'];
+  final List<String> orderStatuses = ['preparing','delivering', 'delivered', 'cancelled', 'ready'];
 
   @override
   void onInit() {
@@ -44,7 +42,6 @@ class OrdersController extends GetxController {
     //fetchStatus();
 
     // Listen for changes in filters and refresh pagination
-    ever<String>(selectedOrderType, (_) => refreshPagination());
     ever<String>(selectedStatus, (_) => refreshPagination());
 
     // Setup pagination listener
@@ -86,18 +83,6 @@ class OrdersController extends GetxController {
     }
   }
 
-  /// Helper method to get English order type for backend
-  String _getEnglishOrderType(String orderType) {
-    switch (orderType.toLowerCase()) {
-      case 'regular':
-        return 'REGULAR';
-      case 'MANUAL':
-        return 'MANUAL';
-      default:
-        return orderType.toUpperCase();
-    }
-  }
-
   /// Helper method to get English status for backend
   String _getEnglishStatus(String status) {
     switch (status.toLowerCase()) {
@@ -133,11 +118,6 @@ class OrdersController extends GetxController {
 
       if (sortBy.value != null) {
         queryParams['sortBy'] = sortBy.value!;
-      }
-
-      // Add new filter parameters with English values
-      if (selectedOrderType.value.isNotEmpty) {
-        queryParams['orderType'] = _getEnglishOrderType(selectedOrderType.value);
       }
 
       if (selectedStatus.value.isNotEmpty) {
@@ -222,19 +202,9 @@ class OrdersController extends GetxController {
     refreshPagination();
   }
 
-  /// New filter methods
-  void updateOrderType(String orderType) {
-    selectedOrderType.value = orderType;
-    // refreshPagination is called automatically by the listener
-  }
-
   void updateStatus(String status) {
     selectedStatus.value = status;
     // refreshPagination is called automatically by the listener
-  }
-
-  void clearOrderTypeFilter() {
-    selectedOrderType.value = '';
   }
 
   void clearStatusFilter() {
@@ -242,7 +212,6 @@ class OrdersController extends GetxController {
   }
 
   void clearAllFilters() {
-    selectedOrderType.value = '';
     selectedStatus.value = '';
     keywords.value = '';
     sortBy.value = null;

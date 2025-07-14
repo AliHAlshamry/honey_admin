@@ -52,8 +52,7 @@ class OrdersScreen extends StatelessWidget {
 
               // ACTIVE FILTERS DISPLAY
               Obx(() {
-                final hasFilters = controller.selectedOrderType.value.isNotEmpty ||
-                    controller.selectedStatus.value.isNotEmpty;
+                final hasFilters = controller.selectedStatus.value.isNotEmpty;
 
                 if (!hasFilters) return const SizedBox.shrink();
 
@@ -61,11 +60,6 @@ class OrdersScreen extends StatelessWidget {
                   spacing: 2,
                   runSpacing: 2,
                   children: [
-                    if (controller.selectedOrderType.value.isNotEmpty)
-                      _buildFilterChip(
-                        '${AppStrings.orderType}: ${AppStrings.getOrderType(controller.selectedOrderType.value)}',
-                            () => controller.clearOrderTypeFilter(),
-                      ),
                     if (controller.selectedStatus.value.isNotEmpty)
                       _buildFilterChip(
                         '${AppStrings.status}: ${AppStrings.getOrderStatus(controller.selectedStatus.value)}',
@@ -99,7 +93,7 @@ class OrdersScreen extends StatelessWidget {
                 child: PagedListView<int, OrderModel>(
                   pagingController: controller.pagingController,
                   padding: const EdgeInsets.all(0),
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   builderDelegate: PagedChildBuilderDelegate<OrderModel>(
                     itemBuilder: (context, order, index) {
                       return Padding(

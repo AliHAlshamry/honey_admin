@@ -47,31 +47,6 @@ class FilterBottomSheet extends StatelessWidget {
 
           // Order Type Section
           const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(AppStrings.orderType, style: TextStyles.textBold16),
-          ),
-          const SizedBox(height: 8),
-
-          // Order Type Options
-          Obx(() => Column(
-            children: [
-              _buildFilterOption(
-                context,
-                AppStrings.all,
-                controller.selectedOrderType.value.isEmpty,
-                    () => controller.updateOrderType(''),
-              ),
-              ...controller.orderTypes.map((type) => _buildFilterOption(
-                context,
-                AppStrings.getOrderType(type),
-                controller.selectedOrderType.value == type,
-                    () => controller.updateOrderType(type),
-              )),
-            ],
-          )),
-
-          const SizedBox(height: 24),
 
           // Status Section
           Padding(
