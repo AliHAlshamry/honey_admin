@@ -53,8 +53,9 @@ class OrderCard extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               minTileHeight: 0,
               title: Text(
-                '${order.addressDetails} - ${order.custDistrict} - ${order.custGovernorate}',
+                '${order.custDistrict} - ${order.custGovernorate} - ${order.addressDetails}',
                 style: TextStyles.textRegular12.copyWith(color: AppColors.secondaryColor),
+                maxLines: 1
               ),
               trailing: Text(
                 '$formattedPrice ${AppStrings.iqd}',
@@ -83,7 +84,7 @@ class OrderCard extends StatelessWidget {
                           },
                         ),*/
                         Text(
-                          AppStrings.getOrderType(order.orderType.toUpperCase()),
+                         '${order.number}',
                           style: TextStyles.textSemiBold12.copyWith(color: AppColors.secondaryColor),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

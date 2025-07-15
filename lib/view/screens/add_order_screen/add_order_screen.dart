@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../controllers/cart_controller.dart';
-import '../../../controllers/direct_controller.dart';
 import '../../../controllers/items_controller.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
@@ -12,12 +11,11 @@ import 'widgets/build_address_field.dart';
 import 'widgets/build_item_selection.dart';
 import 'widgets/customer_info_fields.dart';
 
-class AddOrderScreen extends GetView<DirectController> {
+class AddOrderScreen extends GetView<CartController> {
   const AddOrderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final CartController cartController = Get.find<CartController>();
     return Obx(() {
       if (controller.loading.value) {
         return const Scaffold(body: Center(child: CircularProgressIndicator()));

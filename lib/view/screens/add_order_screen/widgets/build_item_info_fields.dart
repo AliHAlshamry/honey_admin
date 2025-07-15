@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../controllers/direct_controller.dart';
+import '../../../../controllers/cart_controller.dart';
 import '../../../../utils/constants/app_strings.dart';
 import 'custom_svg_icon.dart';
 
-class BuildItemInfoFields extends GetView<DirectController> {
+class BuildItemInfoFields extends GetView<CartController> {
   const BuildItemInfoFields({super.key});
 
   @override

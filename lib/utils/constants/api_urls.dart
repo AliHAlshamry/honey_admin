@@ -1,5 +1,5 @@
 class ApiUrls{
-  static const baseUrl = 'https://api.honey-comb.store/oms';
+  static const baseUrl = 'https://api.honey-comb.store/oms-dev';
   static const travelCompanyUrl = '$baseUrl/travelCompany';
   static const voyageUrl = '$baseUrl/voyage';
   static const governoratesUrl = '$baseUrl/governorates';

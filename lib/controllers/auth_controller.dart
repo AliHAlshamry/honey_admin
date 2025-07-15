@@ -6,7 +6,6 @@ import '../api/api_utils.dart';
 import '../api/end_points.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_strings.dart';
-import '../view/screens/login_screen.dart';
 
 class AuthController extends GetxController {
   final _box = Hive.box(AppStrings.boxKey);

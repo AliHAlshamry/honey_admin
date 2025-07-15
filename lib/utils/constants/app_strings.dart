@@ -120,6 +120,7 @@ class AppStrings {
   static const ready = "مكتمل";
   static const delivery = "يتم التوصيل";
   static const delivered = "تم التوصيل";
+  static const New = "جديد";
   static const searchHint = "بحث عن الطلبات";
   static const orderType = "نوع الطلب";
   static const status = "الحالة";
@@ -169,23 +170,14 @@ class AppStrings {
         return pending;
       case 'READY':
         return ready;
-      case 'DELIVERY':
+      case 'DELIVERING':
         return delivery;
       case 'DELIVERED':
         return delivered;
+      case 'NEW':
+        return New;
       default:
         return status;
-    }
-  }
-
-  static String getOrderType(String type) {
-    switch (type.toUpperCase()) {
-      case 'REGULAR':
-        return regular;
-      case 'MANUAL':
-        return custom;
-      default:
-        return type;
     }
   }
 }

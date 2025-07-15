@@ -11,7 +11,9 @@ import 'direct_order_model.dart';
 import 'governorate_model.dart';
 import 'item_model.dart';
 import 'login_model.dart';
+import 'order_dto.dart';
 import 'order_model.dart';
+import 'product_item_model.dart';
 import 'product_model.dart';
 import 'status_model.dart';
 import 'title_model.dart';
@@ -38,7 +40,8 @@ part 'serializers.g.dart';
   ProductImageModel,
   CategoryModel,
   CustomProductModel,
-  ProductModel
+  ProductModel,
+  OrderDto
 ])
 final Serializers serializers = (_$serializers.toBuilder()
   ..add(Iso8601DateTimeSerializer())

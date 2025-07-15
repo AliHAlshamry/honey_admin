@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:honey_admin/controllers/cart_controller.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../controllers/items_controller.dart';
@@ -14,11 +15,13 @@ import 'custom_inkwell.dart';
 import 'text_price.dart';
 
 class CartItem extends StatelessWidget {
-  CartItem({super.key, required this.product, required this.quantity});
+  CartItem({super.key, required this.product, required this.quantity, this.type= 'internal'});
 
   final ItemModel product;
   final int quantity;
   final controller = Get.find<ItemController>();
+  final directController = Get.find<CartController>();
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -107,16 +110,16 @@ class CartItem extends StatelessWidget {
                                 children: [
                                   CustomInkwell(
                                     onTap: () {
-                                      if (product.qty == null) {
-                                        controller.incrementQuantity(product);
-                                      } else if (controller.item.containsKey(product)) {
-                                        double currentQty = controller.item[product] ?? 0;
-                                        if ((product.qty ?? 0) > 0 && currentQty < (product.qty ?? 0)) {
-                                          controller.incrementQuantity(product);
+                                        if (type == 'EXTERNAL') {
+                                          controller.addCustomItem(
+                                            product.name,
+                                            product.orginalPrice,
+                                            1,
+                                            description: product.description,
+                                          );
+                                        } else {
+                                          controller.addItem(product);
                                         }
-                                      } else if ((product.qty ?? 0) > 0) {
-                                        controller.incrementQuantity(product);
-                                      }
                                     },
                                     child: SvgPicture.asset(
                                       './assets/icons/ic_plus.svg',
@@ -135,14 +138,14 @@ class CartItem extends StatelessWidget {
                                         width: 24,
                                         child: Text(
                                           textAlign: TextAlign.center,
-                                          '${controller.item[product] != null ? controller.item[product]?.toInt() : 0}',
+                                          '${controller.getProductQuantity(product.id)}',
                                           style: TextStyles.textBold16,
                                         ),
                                       ),
                                     ),
                                   ),
                                   CustomInkwell(
-                                    onTap: () => controller.decrementQuantity(product),
+                                    onTap: () => controller.decrementItem(product),
                                     child: SvgPicture.asset('./assets/icons/ic_minus.svg'),
                                   ),
                                 ],

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../../controllers/direct_controller.dart';
+import '../../../../controllers/cart_controller.dart';
 import '../../../../utils/constants/app_strings.dart';
 import 'custom_svg_icon.dart';
 
-class CustomerInfoFields extends GetView<DirectController> {
+class CustomerInfoFields extends GetView<CartController> {
   const CustomerInfoFields({super.key});
 
   @override

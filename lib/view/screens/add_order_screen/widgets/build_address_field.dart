@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:honey_admin/view/widgets/custom_inkwell.dart';
 
-import '../../../../controllers/direct_controller.dart';
+import '../../../../controllers/cart_controller.dart';
 import '../../../../controllers/governorates_controller.dart';
 import '../../../../utils/constants/app_strings.dart';
 import 'custom_svg_icon.dart';
 import 'location_selector_widget.dart';
 
-class AddressFields extends GetView<DirectController> {
+class AddressFields extends GetView<CartController> {
   const AddressFields({super.key});
 
   @override

@@ -16,7 +16,7 @@ abstract class ProductModel implements Built<ProductModel, ProductModelBuilder> 
 
   String get sku;
 
-  String get price;
+  String? get price;
 
   int get qty;
 

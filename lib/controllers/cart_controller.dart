@@ -1,25 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:honey_admin/controllers/items_controller.dart';
+import 'package:honey_admin/models/order_dto.dart';
 import 'package:honey_admin/utils/constants/api_urls.dart';
 
 import '../api/api_utils.dart';
-import '../models/direct_order_model.dart';
 import '../models/item_model.dart';
 import '../models/serializers.dart';
 import '../utils/constants/app_strings.dart';
 import 'governorates_controller.dart';
 
-///helper :
-class SelectedItem {
-  final ItemModel item;
-  final TextEditingController quantityController;
-
-  SelectedItem(this.item, {int initialQuantity = 1})
-    : quantityController = TextEditingController(text: initialQuantity.toString());
-}
-
-class DirectController extends GetxController {
+class CartController extends GetxController {
   // Form Controllers
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
@@ -31,15 +22,15 @@ class DirectController extends GetxController {
   final itemQtyController = TextEditingController();
   final customPriceController = TextEditingController();
 
-  final Rxn<double> selectedPrice = Rxn<double>();
   final RxList<ItemModel> items = <ItemModel>[].obs;
-  final quantityController = TextEditingController();
+  final RxList<ItemModel> products = <ItemModel>[].obs;
   final RxBool loading = false.obs;
   final RxBool loadingItems = false.obs;
+  final RxDouble totalPrice = 0.0.obs;
+  final cartController = Get.find<ItemController>();
 
   // Validation
   RxBool isValid = false.obs;
-  final RxList<SelectedItem> selectedItems = <SelectedItem>[].obs;
   late GovernoratesController governoratesController;
   late ItemController itemController;
 
@@ -77,7 +68,6 @@ class DirectController extends GetxController {
     itemQtyController.addListener(validateForm);
     customPriceController.addListener(validateForm);
     noteController.addListener(validateForm);
-    ever(selectedPrice, (_) => validateForm());
     await fetchItems();
 
     scrollController.addListener(() {
@@ -89,10 +79,6 @@ class DirectController extends GetxController {
         }
       }
     });
-  }
-
-  void selectPrice(double price) {
-    selectedPrice.value = price;
   }
 
   void validateForm() {
@@ -112,11 +98,8 @@ class DirectController extends GetxController {
     itemNameController.clear();
     itemQtyController.clear();
     customPriceController.clear();
-    quantityController.clear();
     cityController.clear();
     townController.clear();
-    selectedPrice.value = null;
-    selectedItems.clear();
   }
 
   Future<void> fetchItems({bool isPagination = false}) async {
@@ -127,7 +110,7 @@ class DirectController extends GetxController {
       if (!isPagination) {
         _currentPage = 1;
         hasMoreItems = true;
-        items.clear();
+        products.clear();
       }
 
       final response = await ApiUtils().get(
@@ -140,7 +123,7 @@ class DirectController extends GetxController {
       final List<ItemModel> newItems = (itemListResponse?.data ?? <ItemModel>[]).toList();
 
       if (newItems.isNotEmpty) {
-        items.addAll(newItems);
+        products.addAll(newItems);
         _currentPage++;
         if (newItems.length < _pageSize) {
           hasMoreItems = false;
@@ -159,31 +142,21 @@ class DirectController extends GetxController {
   Future<void> submitOrder() async {
     try {
       String phoneNumber = '+964${phoneController.text.substring(1)}';
-      List<OrderItemModel> orderItems;
-      orderItems = [
-        OrderItemModel(
-          (p0) =>
-              p0
-                ..name = itemNameController.text
-                ..qty = int.parse(itemQtyController.text)
-                ..price = double.parse(customPriceController.text.replaceAll(',', '')),
-        ),
-      ];
-      final order = DirectOrderModel(
-        (b) =>
-            b
-              ..orderType = 'REGULAR'
-              ..custName = nameController.text
-              ..custPhone = phoneNumber
-              ..cityId = governoratesController.selectedDistrictId.value
-              ..addressDetails = addressController.text
-              ..note = noteController.text
-              ..orderItems.replace(orderItems),
+      final dto = OrderDto.fromControllerData(
+        custName: nameController.text,
+        custPhone: phoneNumber,
+        cityId: governoratesController.selectedDistrictId.value,
+        address:  addressController.text,
+        note: noteController.text,
+        cartItems: cartController.items,
       );
+
+      final payload = dto.toJson();
+
 
       final response = await ApiUtils().post(
         endpoint: ApiUrls.ordersUrl,
-        data: serializers.serializeWith(DirectOrderModel.serializer, order) as Map<String, dynamic>,
+        data: payload,
       );
 
       if (response.statusCode == 201) {
@@ -205,27 +178,13 @@ class DirectController extends GetxController {
     itemNameController.dispose();
     itemQtyController.dispose();
     customPriceController.dispose();
-    for (var item in selectedItems) {
-      item.quantityController.dispose();
-    }
+    cartController.items.clear();
     super.onClose();
   }
 
   bool checkSelectedItems() {
-    List<OrderItemModel> orderItems =
-        itemController.item.entries
-            .where((entry) => entry.value > 0)
-            .map(
-              (entry) => OrderItemModel(
-                (p0) =>
-                    p0
-                      ..name = entry.key.name
-                      ..qty = entry.value.toInt()
-                      ..price = double.parse(entry.key.discountedPrice ?? entry.key.orginalPrice),
-              ),
-            )
-            .toList();
-    return orderItems.isNotEmpty;
+    return
+        itemController.items.isNotEmpty;
   }
 
   @override

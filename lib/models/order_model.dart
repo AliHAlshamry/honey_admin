@@ -11,7 +11,7 @@ abstract class OrderModel implements Built<OrderModel, OrderModelBuilder> {
 
   String get id;
   int get number;
-  String get orderType;
+  String? get orderType;
   String get status;
   String get price;
   String get pricingCurrency;
