@@ -160,6 +160,8 @@ class AppStrings {
   static const customItems = "المنتجات المخصصة";
   static const cancelOrder = "الغاء الطلب";
 
+  static const date = 'التاريخ';
+
   static String getOrderStatus(String status) {
     switch (status.toUpperCase()) {
       case 'CANCELLED':

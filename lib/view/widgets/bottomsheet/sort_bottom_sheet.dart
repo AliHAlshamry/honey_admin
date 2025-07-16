@@ -18,8 +18,8 @@ class SortBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
 
     // the two dimensions
-    final sortByValues = ['custName', 'price'];
-    final sortByLabels = [AppStrings.name, AppStrings.price];
+    final sortByValues = ['custName', 'price', 'updatedAt'];
+    final sortByLabels = [AppStrings.name, AppStrings.price, AppStrings.date];
     final orderValues = ['asc', 'desc'];
     final orderLabels = [AppStrings.asc, AppStrings.desc];
 

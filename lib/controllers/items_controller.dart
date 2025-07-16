@@ -110,6 +110,7 @@ class ItemController extends GetxController with StateMixin<Map<ItemModel, doubl
       updateTotalPrice();
 
       final cartIdx = items.indexWhere((e) => e.product.id == productId);
+      final customCartIndex = customItems.indexWhere((e) => e.product.id == productId);
       if (cartIdx >= 0) {
         final updatedProduct = customProducts[customIdx].toItemModel();
         final updatedEntry = CartEntry(
@@ -119,7 +120,7 @@ class ItemController extends GetxController with StateMixin<Map<ItemModel, doubl
           identifier: name
         );
         customItems[cartIdx] = updatedEntry;
-        items[cartIdx] = updatedEntry;
+        items[customCartIndex] = updatedEntry;
         items.refresh();
         updateTotalPrice();
         return updatedEntry;

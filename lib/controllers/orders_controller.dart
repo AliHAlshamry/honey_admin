@@ -39,8 +39,7 @@ class OrdersController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    //fetchStatus();
-
+    updateSort('updatedAt', 'desc');
     // Listen for changes in filters and refresh pagination
     ever<String>(selectedStatus, (_) => refreshPagination());
 
