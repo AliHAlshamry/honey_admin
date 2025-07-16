@@ -135,11 +135,12 @@ class CartItem extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                     child: Obx(
                                       () => SizedBox(
-                                        width: 24,
+                                        width: controller.getProductQuantity(product.id).toString().length >= 3 ? 38 : 24,
                                         child: Text(
                                           textAlign: TextAlign.center,
                                           '${controller.getProductQuantity(product.id)}',
                                           style: TextStyles.textBold16,
+                                          maxLines: 1,
                                         ),
                                       ),
                                     ),
