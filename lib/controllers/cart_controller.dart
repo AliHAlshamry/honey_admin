@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:honey_admin/controllers/items_controller.dart';
+import 'package:honey_admin/controllers/orders_controller.dart';
 import 'package:honey_admin/models/order_dto.dart';
 import 'package:honey_admin/utils/constants/api_urls.dart';
 
@@ -184,6 +185,9 @@ class CartController extends GetxController {
 
         // Reset validation
         isValid.value = false;
+        if(Get.isRegistered<OrdersController>()) {
+          Get.find<OrdersController>().refreshOrders();
+        }
 
         // Show success message and go back
         Get.back();

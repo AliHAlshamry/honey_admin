@@ -16,7 +16,7 @@ import '../widgets/search_text_field.dart';
 class OrdersScreen extends StatelessWidget {
   OrdersScreen({super.key});
 
-  final controller = Get.put(OrdersController());
+  final controller = Get.find<OrdersController>();
 
   @override
   Widget build(BuildContext context) {
@@ -90,57 +90,60 @@ class OrdersScreen extends StatelessWidget {
               // ORDERS LIST
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.6,
-                child: PagedListView<int, OrderModel>(
-                  pagingController: controller.pagingController,
-                  padding: const EdgeInsets.all(0),
-                  physics: const BouncingScrollPhysics(),
-                  builderDelegate: PagedChildBuilderDelegate<OrderModel>(
-                    itemBuilder: (context, order, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: OrderCard(order: order),
-                      );
-                    },
-                    firstPageErrorIndicatorBuilder: (context) => Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(AppStrings.errorFetchOrders, textAlign: TextAlign.center),
-                          ElevatedButton(
-                            onPressed: () => controller.pagingController.refresh(),
-                            child: Text(AppStrings.retry),
-                          ),
-                        ],
+                child: RefreshIndicator(
+                  onRefresh: ()=> controller.refreshOrders(),
+                  child: PagedListView<int, OrderModel>(
+                    pagingController: controller.pagingController,
+                    padding: const EdgeInsets.all(0),
+                    physics: const BouncingScrollPhysics(),
+                    builderDelegate: PagedChildBuilderDelegate<OrderModel>(
+                      itemBuilder: (context, order, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: OrderCard(order: order),
+                        );
+                      },
+                      firstPageErrorIndicatorBuilder: (context) => Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(AppStrings.errorFetchOrders, textAlign: TextAlign.center),
+                            ElevatedButton(
+                              onPressed: () => controller.pagingController.refresh(),
+                              child: Text(AppStrings.retry),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    newPageErrorIndicatorBuilder: (context) => Center(
-                      child: Column(
-                        children: [
-                          Text(AppStrings.errorLoadingMoreOrders),
-                          ElevatedButton(
-                            onPressed: () => controller.pagingController.retryLastFailedRequest(),
-                            child: Text(AppStrings.retry),
-                          ),
-                        ],
+                      newPageErrorIndicatorBuilder: (context) => Center(
+                        child: Column(
+                          children: [
+                            Text(AppStrings.errorLoadingMoreOrders),
+                            ElevatedButton(
+                              onPressed: () => controller.pagingController.retryLastFailedRequest(),
+                              child: Text(AppStrings.retry),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    firstPageProgressIndicatorBuilder: (context) =>
-                    const Center(child: CircularProgressIndicator()),
-                    newPageProgressIndicatorBuilder: (context) => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: CircularProgressIndicator(),
+                      firstPageProgressIndicatorBuilder: (context) =>
+                      const Center(child: CircularProgressIndicator()),
+                      newPageProgressIndicatorBuilder: (context) => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
-                    ),
-                    noItemsFoundIndicatorBuilder: (context) => Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(Assets.imagesEmptyCart),
-                          const SizedBox(height: 8),
-                          Text(AppStrings.noOrders),
-                        ],
+                      noItemsFoundIndicatorBuilder: (context) => Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(Assets.imagesEmptyCart),
+                            const SizedBox(height: 8),
+                            Text(AppStrings.noOrders),
+                          ],
+                        ),
                       ),
                     ),
                   ),

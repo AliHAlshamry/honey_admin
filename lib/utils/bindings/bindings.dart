@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/governorates_controller.dart';
 import '../../controllers/items_controller.dart';
+import '../../controllers/orders_controller.dart';
 
 class HomeBinding extends Bindings {
   @override
@@ -11,6 +12,7 @@ class HomeBinding extends Bindings {
     Get.put(ItemController());
     Get.put(CartController());
     Get.put(GovernoratesController());
+    Get.put(OrdersController());
   }
 }
 

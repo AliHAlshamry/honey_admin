@@ -206,6 +206,10 @@ class OrdersController extends GetxController {
     // refreshPagination is called automatically by the listener
   }
 
+  Future<void> refreshOrders() async {
+    pagingController.refresh();
+  }
+
   void clearStatusFilter() {
     selectedStatus.value = '';
   }
