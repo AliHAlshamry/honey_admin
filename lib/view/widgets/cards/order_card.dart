@@ -9,6 +9,7 @@ import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_strings.dart';
 import '../../../utils/constants/text_styles.dart';
 import '../../../utils/helper/order_status_color.dart';
+import '../../../utils/helper/show_cancel_order_option.dart';
 
 class OrderCard extends StatelessWidget {
   const OrderCard({super.key, required this.order});
@@ -31,21 +32,24 @@ class OrderCard extends StatelessWidget {
               minVerticalPadding: 0,
               minTileHeight: 0,
               title: Text(order.custName, style: TextStyles.textSemiBold14.copyWith(color: Colors.black)),
-              trailing: PopupMenuButton<String>(
-                icon: Icon(Icons.more_vert, color: Colors.black),
-                color: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                onSelected: (value) {
-                  if (value == 'cancel') {
-                    OrdersController controller = Get.find();
-                    controller.cancelOrder(order.id, order.deliveryRepresentativeId);
-                  }
-                },
-                itemBuilder:
-                    (BuildContext context) => [
-                      PopupMenuItem<String>(value: 'cancel', child: Text(AppStrings.cancelOrder)),
-                    ],
-              ),
+              trailing:
+                  shouldShowCancelOption(order.status)
+                      ? PopupMenuButton<String>(
+                        icon: Icon(Icons.more_vert, color: Colors.black),
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        onSelected: (value) {
+                          if (value == 'cancel') {
+                            OrdersController controller = Get.find();
+                            controller.cancelOrder(order.id, order.deliveryRepresentativeId);
+                          }
+                        },
+                        itemBuilder:
+                            (BuildContext context) => [
+                              PopupMenuItem<String>(value: 'cancel', child: Text(AppStrings.cancelOrder)),
+                            ],
+                      )
+                      : null,
             ),
             SizedBox(height: 16),
             Text(order.note, style: TextStyles.textRegular12.copyWith(color: AppColors.secondaryColor)),
@@ -55,7 +59,7 @@ class OrderCard extends StatelessWidget {
               title: Text(
                 '${order.custDistrict} - ${order.custGovernorate} - ${order.addressDetails}',
                 style: TextStyles.textRegular12.copyWith(color: AppColors.secondaryColor),
-                maxLines: 1
+                maxLines: 1,
               ),
               trailing: Text(
                 '$formattedPrice ${AppStrings.iqd}',
@@ -84,7 +88,7 @@ class OrderCard extends StatelessWidget {
                           },
                         ),*/
                         Text(
-                         '${order.number}',
+                          '${order.number}',
                           style: TextStyles.textSemiBold12.copyWith(color: AppColors.secondaryColor),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -114,14 +118,10 @@ class OrderCard extends StatelessWidget {
                     child: Center(
                       child: Text(
                         AppStrings.getOrderStatus(order.status.toUpperCase()),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: getOrderStatusTextColor(order.status),
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w600, color: getOrderStatusTextColor(order.status)),
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),

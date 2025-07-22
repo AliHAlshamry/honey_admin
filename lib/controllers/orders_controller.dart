@@ -34,7 +34,7 @@ class OrdersController extends GetxController {
   // final Rxn<StatusModel> selectedStatus = Rxn<StatusModel>();
 
   /// Filter options
-  final List<String> orderStatuses = ['preparing','delivering', 'delivered', 'cancelled', 'ready'];
+  final List<String> orderStatuses = ['preparing', 'delivering', 'delivered', 'cancelled', 'ready'];
 
   @override
   void onInit() {
@@ -59,11 +59,11 @@ class OrdersController extends GetxController {
         final rawList = response.data as List<dynamic>;
 
         final items =
-        rawList
-            .cast<Map<String, dynamic>>()
-            .map((json) => serializers.deserializeWith(StatusModel.serializer, json))
-            .whereType<StatusModel>()
-            .toList();
+            rawList
+                .cast<Map<String, dynamic>>()
+                .map((json) => serializers.deserializeWith(StatusModel.serializer, json))
+                .whereType<StatusModel>()
+                .toList();
 
         ordersStatus.assignAll(items);
         return items;
@@ -124,19 +124,16 @@ class OrdersController extends GetxController {
       }
       debugPrint(queryParams.toString());
 
-      final response = await ApiUtils().get(
-        endpoint: EndPoints.ordersUser,
-        queryParameters: queryParams,
-      );
+      final response = await ApiUtils().get(endpoint: EndPoints.ordersUser, queryParameters: queryParams);
 
       if (response.statusCode == 200) {
         final payload = Map<String, dynamic>.from(response.data);
         final items =
-        (payload['data'] as List)
-            .cast<Map<String, dynamic>>()
-            .map((json) => serializers.deserializeWith(OrderModel.serializer, json))
-            .whereType<OrderModel>()
-            .toList();
+            (payload['data'] as List)
+                .cast<Map<String, dynamic>>()
+                .map((json) => serializers.deserializeWith(OrderModel.serializer, json))
+                .whereType<OrderModel>()
+                .toList();
 
         final int totalCount = payload['totalCount'] as int;
         this.totalCount.value = totalCount;
@@ -159,18 +156,13 @@ class OrdersController extends GetxController {
     }
   }
 
-  Future<void> cancelOrder (String orderId, String? representativeId) async{
+  Future<void> cancelOrder(String orderId, String? representativeId) async {
     try {
-      final Map<String, String> queryParams = {
-        "status" : "CANCELLED"
-      };
+      final Map<String, String> queryParams = {"status": "CANCELLED"};
 
       debugPrint('${EndPoints.orders}$orderId/status');
 
-      final response = await ApiUtils().patch(
-        endpoint: '${EndPoints.orders}$orderId/status',
-        body: queryParams
-      );
+      final response = await ApiUtils().patch(endpoint: '${EndPoints.orders}$orderId/status', body: queryParams);
 
       if (response.statusCode == 200) {
         pagingController.refresh();
