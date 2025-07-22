@@ -161,6 +161,7 @@ class AppStrings {
   static const cancelOrder = "الغاء الطلب";
 
   static const date = 'التاريخ';
+  static const suspended = 'معلق';
 
   static String getOrderStatus(String status) {
     switch (status.toUpperCase()) {
@@ -176,6 +177,8 @@ class AppStrings {
         return delivery;
       case 'DELIVERED':
         return delivered;
+      case 'SUSPENDED':
+        return suspended;
       case 'NEW':
         return New;
       default:
