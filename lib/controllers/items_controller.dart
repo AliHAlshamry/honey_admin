@@ -175,6 +175,9 @@ class ItemController extends GetxController with StateMixin<Map<ItemModel, doubl
   void clear() {
     items.clear();
     customProducts.clear();
+    customItems.clear();
+    products.clear();
+    totalPrice.value = 0.0;
   }
 }
 

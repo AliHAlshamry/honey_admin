@@ -146,13 +146,12 @@ class CartController extends GetxController {
         custName: nameController.text,
         custPhone: phoneNumber,
         cityId: governoratesController.selectedDistrictId.value,
-        address:  addressController.text,
+        address: addressController.text,
         note: noteController.text,
         cartItems: cartController.items,
       );
 
       final payload = dto.toJson();
-
 
       final response = await ApiUtils().post(
         endpoint: ApiUrls.ordersUrl,
@@ -160,9 +159,35 @@ class CartController extends GetxController {
       );
 
       if (response.statusCode == 201) {
+        // Clear all form fields
+        clearAllFields();
+
+        // Clear all cart items and custom products
+        itemController.clear();
+
+        // Clear CartController lists
+        items.clear();
+        products.clear();
+
+        // Reset pagination
+        _currentPage = 1;
+        hasMoreItems = true;
+
+        // Refetch items from the beginning
+        await fetchItems();
+
+        // Update total price
+        itemController.updateTotalPrice();
+
+        // Reset GovernoratesController state
+        governoratesController.clear();
+
+        // Reset validation
+        isValid.value = false;
+
+        // Show success message and go back
         Get.back();
         Get.snackbar(AppStrings.success, AppStrings.orderCreated);
-        clearAllFields();
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to create order');

@@ -108,4 +108,22 @@ class GovernoratesController extends GetxController {
   void setSelectedDistrict(GovernorateModel district) {
     selectedDistrictId.value = district.id;
   }
+
+  /// Clear all selections and districts
+  void clear() {
+    selectedGovernorateId.value = '';
+    selectedDistrictId.value = '';
+    districts.clear();
+    loading.value = false;
+    districtsLoading.value = false;
+    // Reset pagination
+    _currentPage = 1;
+    _hasMore = true;
+  }
+
+  /// Clear everything including governorates (complete reset)
+  void clearAll() {
+    clear();
+    governorates.clear();
+  }
 }
